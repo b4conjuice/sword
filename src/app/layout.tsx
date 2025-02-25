@@ -2,10 +2,9 @@ import type { Viewport } from 'next'
 import { ClerkProvider } from '@clerk/nextjs'
 
 import { TRPCReactProvider } from '@/trpc/react'
+import { DEFAULT_TITLE } from '@/lib/defaults'
 
 import '@/styles/globals.css'
-
-const DEFAULT_TITLE = 'sword'
 
 export const metadata = {
   manifest: '/manifest.json',

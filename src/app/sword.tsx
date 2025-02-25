@@ -30,7 +30,6 @@ export default function Sword() {
   const bookWithChapter = `${bookName} ${bookChapter}`
   return (
     <div className='flex flex-grow flex-col space-y-4'>
-      <h1>sword</h1>
       <ul className='flex-grow space-y-4'>
         {[].map(({ chapterLink, bookChapter }) => (
           <li key={chapterLink}>
@@ -62,7 +61,7 @@ export default function Sword() {
       </a>
       <div className='flex'>
         <select
-          className='bg-cobalt w-full p-4'
+          className='w-full bg-cobalt p-4'
           value={swordText?.split(':')[0]}
           onChange={e => {
             const newLookupText = `${e.target.value}:1`
@@ -76,7 +75,7 @@ export default function Sword() {
           ))}
         </select>
         <select
-          className='bg-cobalt w-full p-4'
+          className='w-full bg-cobalt p-4'
           value={swordText?.split(':')[1]}
           onChange={e => {
             const [bookNumber] = swordText.split(':')
