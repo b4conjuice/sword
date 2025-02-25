@@ -1,6 +1,6 @@
 'use client'
 
-import CommandPalette from '@/components/commandPalette'
+import CommandPalette from '@/components/command-palette'
 import { Button } from '@/components/ui'
 import books, { booksAndChaptersMap } from '@/lib/books'
 import useLocalStorage from '@/lib/useLocalStorage'
