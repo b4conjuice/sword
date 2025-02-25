@@ -1,0 +1,8 @@
+{
+  "name": "sword",
+  "short_name": "sword",
+  "lang": "en-US",
+  "start_url": "/",
+  "display": "standalone",
+  "scope": "/"
+}
