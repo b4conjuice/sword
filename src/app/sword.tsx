@@ -1,5 +1,7 @@
 'use client'
 
+import { SignedIn } from '@clerk/nextjs'
+
 import CommandPalette from '@/components/command-palette'
 import { Button } from '@/components/ui'
 import books, { booksAndChaptersMap } from '@/lib/books'
@@ -95,45 +97,47 @@ export default function Sword() {
           ))}
         </select>
       </div>
-      <CommandPalette
-        commands={[
-          {
-            id: `go-text`,
-            title: `go text`,
-            action: () => {
-              setHistory([
-                ...history,
-                {
-                  chapterLink,
-                  bookChapter: bookWithChapter,
-                },
-              ])
-              window.open(chapterLink, '_blank')
-            },
-          },
-          ...books.map((book, index) => ({
-            id: `lookup-${book}`,
-            title: `lookup ${book}`,
-            action: () => {
-              setSwordText(`${index + 1}:1`)
-            },
-          })),
-          ...Array.from(
+      <SignedIn>
+        <CommandPalette
+          commands={[
             {
-              length: bookChapters,
-            },
-            (_, i) => i + 1
-          ).map(bookChapter => {
-            return {
-              id: `lookup-${bookName}-${bookChapter}`,
-              title: `lookup ${bookName} ${bookChapter}`,
+              id: `go-text`,
+              title: `go text`,
               action: () => {
-                setSwordText(`${bookNumber}:${bookChapter}`)
+                setHistory([
+                  ...history,
+                  {
+                    chapterLink,
+                    bookChapter: bookWithChapter,
+                  },
+                ])
+                window.open(chapterLink, '_blank')
               },
-            }
-          }),
-        ]}
-      />
+            },
+            ...books.map((book, index) => ({
+              id: `lookup-${book}`,
+              title: `lookup ${book}`,
+              action: () => {
+                setSwordText(`${index + 1}:1`)
+              },
+            })),
+            ...Array.from(
+              {
+                length: bookChapters,
+              },
+              (_, i) => i + 1
+            ).map(bookChapter => {
+              return {
+                id: `lookup-${bookName}-${bookChapter}`,
+                title: `lookup ${bookName} ${bookChapter}`,
+                action: () => {
+                  setSwordText(`${bookNumber}:${bookChapter}`)
+                },
+              }
+            }),
+          ]}
+        />
+      </SignedIn>
     </div>
   )
 }
