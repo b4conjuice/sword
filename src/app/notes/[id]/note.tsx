@@ -14,7 +14,7 @@ import {
   TrashIcon,
   WrenchIcon,
 } from '@heroicons/react/20/solid'
-// import { useDebounce } from '@uidotdev/usehooks'
+import { useDebounce } from '@uidotdev/usehooks'
 import { useAuth } from '@clerk/nextjs'
 
 import useLocalStorage from '@/lib/useLocalStorage'
@@ -71,27 +71,27 @@ export default function NoteComponent({
   const hasChanges = text !== (note?.text ?? '')
   const canSave = !readOnly && !(!hasChanges || text === '')
 
-  // const debouncedText = useDebounce(text, 500)
+  const debouncedText = useDebounce(text, 500)
 
-  // useEffect(() => {
-  //   async function updateNote() {
-  //     if (note) {
-  //       const [title, ...body] = text.split('\n\n')
-  //       const newNote = {
-  //         ...note,
-  //         id: note.id,
-  //         text,
-  //         title: title ?? '',
-  //         body: body.join('\n\n'),
-  //       }
+  useEffect(() => {
+    async function updateNote() {
+      if (note) {
+        const [title, ...body] = text.split('\n\n')
+        const newNote = {
+          ...note,
+          id: note.id,
+          text,
+          title: title ?? '',
+          body: body.join('\n\n'),
+        }
 
-  //       await saveNote(newNote)
-  //     }
-  //   }
-  //   if (isSignedIn && canSave) {
-  //     void updateNote()
-  //   }
-  // }, [debouncedText])
+        await saveNote(newNote)
+      }
+    }
+    if (isSignedIn && canSave) {
+      void updateNote()
+    }
+  }, [debouncedText])
 
   const [title, body] = text.split('\n\n')
   const items = body ? body.split('\n') : []
