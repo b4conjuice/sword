@@ -28,11 +28,13 @@ export default function CommandPalette({
   placeholder = 'search commands',
   isOpen: externalIsOpen,
   setIsOpen: externalSetIsOpen,
+  hideLaunchButton,
 }: {
   commands: Command[]
   placeholder?: string
   isOpen?: boolean
   setIsOpen?: React.Dispatch<React.SetStateAction<boolean>>
+  hideLaunchButton?: boolean
 }) {
   const [internalIsOpen, internalSetIsOpen] = useState(false)
   const [query, setQuery] = useState('')
@@ -149,7 +151,7 @@ export default function CommandPalette({
           </TransitionChild>
         </Dialog>
       </Transition>
-      {externalSetIsOpen === undefined && (
+      {externalSetIsOpen === undefined && !hideLaunchButton && (
         <button
           className='absolute bottom-4 right-4 block rounded-lg bg-cb-off-blue p-2 md:hidden'
           type='button'

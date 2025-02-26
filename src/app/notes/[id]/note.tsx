@@ -543,6 +543,7 @@ export default function NoteComponent({
         </div>
       </Modal> */}
       <CommandPalette
+        hideLaunchButton
         commands={[
           {
             id: 'switch-tab-default',
