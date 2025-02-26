@@ -20,7 +20,7 @@ interface Command {
   id: string
   title: string
   subtitle?: string
-  action: (args?: unknown) => void
+  action: (args?: unknown) => void | Promise<unknown>
 }
 
 export default function CommandPalette({
@@ -74,7 +74,7 @@ export default function CommandPalette({
             leaveFrom='opacity-100'
             leaveTo='opacity-0'
           >
-            <DialogBackdrop className='bg-cobalt/75 fixed inset-0' />
+            <DialogBackdrop className='fixed inset-0 bg-cobalt/75' />
           </TransitionChild>
           <TransitionChild
             enter='duration-300 ease-out'
@@ -89,7 +89,7 @@ export default function CommandPalette({
                 as='div'
                 onChange={(command: Command) => {
                   if (command?.action) {
-                    command.action()
+                    void command.action()
                     setIsOpen(false)
                   }
                 }}
@@ -151,13 +151,13 @@ export default function CommandPalette({
       </Transition>
       {externalSetIsOpen === undefined && (
         <button
-          className='bg-cb-off-blue absolute bottom-4 right-4 block rounded-lg p-2 md:hidden'
+          className='absolute bottom-4 right-4 block rounded-lg bg-cb-off-blue p-2 md:hidden'
           type='button'
           onClick={() => {
             setIsOpen(!isOpen)
           }}
         >
-          <RocketLaunchIcon className='text-cb-yellow h-6 w-6' />
+          <RocketLaunchIcon className='h-6 w-6 text-cb-yellow' />
         </button>
       )}
     </>

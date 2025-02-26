@@ -43,7 +43,6 @@ export async function saveNote(note: Note) {
   if (!newNote) {
     throw new Error('something went wrong')
   }
-  revalidatePath(`/notes/${newNote.id}`)
   return newNote.id
 }
 
