@@ -1,3 +1,4 @@
+import type { Metadata } from 'next'
 import Link from 'next/link'
 import { Bars2Icon } from '@heroicons/react/20/solid'
 import { auth } from '@clerk/nextjs/server'
@@ -6,6 +7,25 @@ import { Main } from '@/components/ui'
 import TopNav from '@/components/top-nav'
 import { getNote, getTags } from '@/server/db/notes'
 import Note from './note'
+
+export async function generateMetadata({
+  params,
+}: {
+  params: { id: string }
+}): Promise<Metadata> {
+  const id = Number(params.id)
+  const note = await getNote(id)
+
+  if (!note) {
+    return {
+      title: 'note does not exist',
+    }
+  }
+
+  return {
+    title: note.title,
+  }
+}
 
 export default async function NotePage({
   params,
