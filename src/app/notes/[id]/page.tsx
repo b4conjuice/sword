@@ -11,9 +11,9 @@ import Note from './note'
 export async function generateMetadata({
   params,
 }: {
-  params: { id: string }
+  params: Promise<{ id: string }>
 }): Promise<Metadata> {
-  const id = Number(params.id)
+  const id = Number((await params).id)
   const note = await getNote(id)
 
   if (!note) {
