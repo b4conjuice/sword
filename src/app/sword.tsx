@@ -15,8 +15,10 @@ type HistoryEntry = {
 
 export default function Sword({
   excludeCommandPalette,
+  onClick,
 }: {
   excludeCommandPalette?: boolean
+  onClick?: (args?: unknown) => void
 }) {
   const [swordText, setSwordText] = useLocalStorage('sword-text', '1:1')
   const [history, setHistory] = useLocalStorage<HistoryEntry[]>(
@@ -56,6 +58,9 @@ export default function Sword({
         target='_blank'
         onClick={() => {
           copyToClipboard(bookWithChapter)
+          if (onClick) {
+            onClick(bookWithChapter)
+          }
           setHistory([
             ...history,
             {

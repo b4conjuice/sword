@@ -158,7 +158,28 @@ export default function NoteComponent({
         ) : tab === 'tools' ? (
           <>
             <h2 className='px-2'>tools</h2>
-            <Sword excludeCommandPalette />
+            <Sword
+              excludeCommandPalette
+              onClick={bookWithChapter => {
+                const INSERT = String(bookWithChapter)
+                const newText =
+                  text.substring(0, currentSelectionStart) +
+                  INSERT +
+                  text.substring(currentSelectionEnd, text.length)
+
+                if (textAreaRef.current) {
+                  textAreaRef.current.focus()
+                  textAreaRef.current.value = newText
+
+                  textAreaRef.current.setSelectionRange(
+                    currentSelectionStart + 1,
+                    currentSelectionStart + 1
+                  )
+                }
+
+                setText(newText)
+              }}
+            />
             {/* <Tags note={note} allTags={allTags ?? []} /> */}
           </>
         ) : (
