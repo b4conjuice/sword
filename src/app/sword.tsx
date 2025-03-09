@@ -6,6 +6,7 @@ import CommandPalette from '@/components/command-palette'
 import { Button } from '@/components/ui'
 import books, { booksAndChaptersMap } from '@/lib/books'
 import useLocalStorage from '@/lib/useLocalStorage'
+import copyToClipboard from '@/lib/copyToClipboard'
 
 type HistoryEntry = {
   chapterLink: string
@@ -50,6 +51,7 @@ export default function Sword() {
         href={chapterLink}
         target='_blank'
         onClick={() => {
+          copyToClipboard(bookWithChapter)
           setHistory([
             ...history,
             {
