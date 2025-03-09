@@ -13,7 +13,11 @@ type HistoryEntry = {
   bookChapter: string
 }
 
-export default function Sword() {
+export default function Sword({
+  excludeCommandPalette,
+}: {
+  excludeCommandPalette?: boolean
+}) {
   const [swordText, setSwordText] = useLocalStorage('sword-text', '1:1')
   const [history, setHistory] = useLocalStorage<HistoryEntry[]>(
     'sword-history',
@@ -99,47 +103,49 @@ export default function Sword() {
           ))}
         </select>
       </div>
-      <SignedIn>
-        <CommandPalette
-          commands={[
-            {
-              id: `go-text`,
-              title: `go text`,
-              action: () => {
-                setHistory([
-                  ...history,
-                  {
-                    chapterLink,
-                    bookChapter: bookWithChapter,
-                  },
-                ])
-                window.open(chapterLink, '_blank')
-              },
-            },
-            ...books.map((book, index) => ({
-              id: `lookup-${book}`,
-              title: `lookup ${book}`,
-              action: () => {
-                setSwordText(`${index + 1}:1`)
-              },
-            })),
-            ...Array.from(
+      {!excludeCommandPalette && (
+        <SignedIn>
+          <CommandPalette
+            commands={[
               {
-                length: bookChapters,
-              },
-              (_, i) => i + 1
-            ).map(bookChapter => {
-              return {
-                id: `lookup-${bookName}-${bookChapter}`,
-                title: `lookup ${bookName} ${bookChapter}`,
+                id: `go-text`,
+                title: `go text`,
                 action: () => {
-                  setSwordText(`${bookNumber}:${bookChapter}`)
+                  setHistory([
+                    ...history,
+                    {
+                      chapterLink,
+                      bookChapter: bookWithChapter,
+                    },
+                  ])
+                  window.open(chapterLink, '_blank')
                 },
-              }
-            }),
-          ]}
-        />
-      </SignedIn>
+              },
+              ...books.map((book, index) => ({
+                id: `lookup-${book}`,
+                title: `lookup ${book}`,
+                action: () => {
+                  setSwordText(`${index + 1}:1`)
+                },
+              })),
+              ...Array.from(
+                {
+                  length: bookChapters,
+                },
+                (_, i) => i + 1
+              ).map(bookChapter => {
+                return {
+                  id: `lookup-${bookName}-${bookChapter}`,
+                  title: `lookup ${bookName} ${bookChapter}`,
+                  action: () => {
+                    setSwordText(`${bookNumber}:${bookChapter}`)
+                  },
+                }
+              }),
+            ]}
+          />
+        </SignedIn>
+      )}
     </div>
   )
 }

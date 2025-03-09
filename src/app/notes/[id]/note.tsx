@@ -26,6 +26,7 @@ import { saveNote } from '@/server/actions'
 // import List from './list'
 import CommandPalette from '@/components/command-palette'
 import Textarea from './textarea'
+import Sword from '@/app/sword'
 // import Tags from './tags'
 
 const TABS = ['default', 'settings', 'list', 'tools', 'share'] as const
@@ -157,6 +158,7 @@ export default function NoteComponent({
         ) : tab === 'tools' ? (
           <>
             <h2 className='px-2'>tools</h2>
+            <Sword excludeCommandPalette />
             {/* <Tags note={note} allTags={allTags ?? []} /> */}
           </>
         ) : (
