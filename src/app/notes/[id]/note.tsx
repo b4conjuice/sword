@@ -6,6 +6,7 @@ import Link from 'next/link'
 import {
   ArrowDownOnSquareIcon,
   Bars2Icon,
+  BookOpenIcon,
   Cog6ToothIcon,
   DocumentDuplicateIcon,
   ListBulletIcon,
@@ -27,6 +28,7 @@ import { saveNote } from '@/server/actions'
 import CommandPalette from '@/components/command-palette'
 import Textarea from './textarea'
 import Sword from '@/app/sword'
+import Modal from '@/components/ui/modal'
 // import Tags from './tags'
 
 const TABS = ['default', 'settings', 'list', 'tools', 'share'] as const
@@ -58,6 +60,7 @@ export default function NoteComponent({
   const [currentSelectionStart, setCurrentSelectionStart] = useState(0)
   const [currentSelectionEnd, setCurrentSelectionEnd] = useState(0)
   const [commandKey, setCommandKey] = useLocalStorage('n4-commandKey', '!')
+  const [isSwordModalOpen, setIsSwordModalOpen] = useState(false)
   const [isDiscardChangesModalOpen, setIsDiscardChangesModalOpen] =
     useState(false)
   const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false)
@@ -218,6 +221,15 @@ export default function NoteComponent({
           )}
         </div>
         <div className='flex space-x-4'>
+          <button
+            className='text-cb-mint hover:text-cb-mint/75 disabled:pointer-events-none disabled:text-cb-light-blue'
+            type='button'
+            onClick={() => {
+              setIsSwordModalOpen(!isSwordModalOpen)
+            }}
+          >
+            <BookOpenIcon className='h-6 w-6' />
+          </button>
           {note ? (
             <>
               <button
@@ -306,6 +318,37 @@ export default function NoteComponent({
           )}
         </div>
       </footer>
+      <Modal
+        isOpen={isSwordModalOpen}
+        setIsOpen={setIsSwordModalOpen}
+        title='sword'
+        overlayClassName=''
+      >
+        <div className='flex space-x-4'>
+          <Sword
+            excludeCommandPalette
+            onClick={bookWithChapter => {
+              const INSERT = String(bookWithChapter)
+              const newText =
+                text.substring(0, currentSelectionStart) +
+                INSERT +
+                text.substring(currentSelectionEnd, text.length)
+
+              if (textAreaRef.current) {
+                textAreaRef.current.focus()
+                textAreaRef.current.value = newText
+
+                textAreaRef.current.setSelectionRange(
+                  currentSelectionStart + 1,
+                  currentSelectionStart + 1
+                )
+              }
+
+              setText(newText)
+            }}
+          />
+        </div>
+      </Modal>
       {/* <Modal
         isOpen={isDiscardChangesModalOpen}
         setIsOpen={setIsDiscardChangesModalOpen}
@@ -356,6 +399,13 @@ export default function NoteComponent({
       <CommandPalette
         hideLaunchButton
         commands={[
+          {
+            id: 'open-sword',
+            title: 'open sword',
+            action: () => {
+              setIsSwordModalOpen(true)
+            },
+          },
           {
             id: 'switch-tab-default',
             title: 'switch tab to default',
