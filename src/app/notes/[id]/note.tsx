@@ -322,7 +322,7 @@ export default function NoteComponent({
         isOpen={isSwordModalOpen}
         setIsOpen={setIsSwordModalOpen}
         title='sword'
-        overlayClassName=''
+        backdropBackgroundClassName=''
       >
         <div className='flex space-x-4'>
           <Sword

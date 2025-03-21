@@ -8,13 +8,13 @@ export default function Modal({
   isOpen,
   setIsOpen,
   title,
-  overlayClassName,
+  backdropBackgroundClassName,
   children,
 }: {
   isOpen: boolean
   setIsOpen: Dispatch<SetStateAction<boolean>>
   title?: string
-  overlayClassName?: string
+  backdropBackgroundClassName?: string
   children: React.ReactNode
 }) {
   return (
@@ -34,7 +34,7 @@ export default function Modal({
           <div
             className={classNames(
               'fixed inset-0',
-              overlayClassName ?? 'bg-cobalt/90'
+              backdropBackgroundClassName ?? 'bg-cobalt/90'
             )}
           />
         </Transition.Child>
