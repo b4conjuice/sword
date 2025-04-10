@@ -345,6 +345,7 @@ export default function NoteComponent({
               }
 
               setText(newText)
+              setIsSwordModalOpen(false)
             }}
           />
         </div>
