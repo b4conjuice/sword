@@ -8,17 +8,19 @@ import {
 import Sword from './sword'
 import { Main } from '@/components/ui'
 import TopNav from '@/components/top-nav'
+import HomePageNote from './homepage-note'
 
 export default function Home() {
   return (
     <>
       <TopNav />
-      <Main className='flex flex-col p-4'>
+      <Main className='flex flex-col'>
         <div className='flex flex-grow flex-col'>
-          <Sword />
+          <HomePageNote />
+          {/* <Sword /> */}
         </div>
       </Main>
-      <SignedIn>
+      {/* <SignedIn>
         <footer className='flex items-center justify-between bg-cb-dusty-blue px-2 pb-4 pt-2'>
           <div className='flex space-x-4'>
             <Link
@@ -29,7 +31,7 @@ export default function Home() {
             </Link>
           </div>
           <div className='flex space-x-4'>
-            {/* <button
+            <button
               className='flex w-full justify-center text-cb-yellow hover:text-cb-yellow disabled:pointer-events-none disabled:opacity-25'
               type='button'
               // onClick={async () => {
@@ -37,10 +39,10 @@ export default function Home() {
               // }}
             >
               <ArrowDownOnSquareIcon className='h-6 w-6' />
-            </button> */}
+            </button>
           </div>
         </footer>
-      </SignedIn>
+      </SignedIn> */}
     </>
   )
 }
