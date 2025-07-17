@@ -10,6 +10,7 @@ import {
   Cog6ToothIcon,
   DocumentDuplicateIcon,
   ListBulletIcon,
+  MagnifyingGlassIcon,
   PencilSquareIcon,
   ShareIcon,
   TrashIcon,
@@ -29,6 +30,8 @@ import CommandPalette from '@/components/command-palette'
 import Textarea from './textarea'
 import Sword from '@/app/sword'
 import Modal from '@/components/ui/modal'
+import BookSearch from '@/components/book-search'
+import { getBookLink, transformScripturetoText } from '@/lib/books'
 // import Tags from './tags'
 
 const TABS = ['default', 'settings', 'list', 'tools', 'share'] as const
@@ -41,6 +44,7 @@ export default function NoteComponent({
   note: Note
   allTags?: string[]
 }) {
+  const searchRef = useRef<HTMLInputElement | null>(null)
   const [swordText, setSwordText] = useState<string | undefined>('1:1')
   const { isSignedIn } = useAuth()
   const router = useRouter()
@@ -200,122 +204,162 @@ export default function NoteComponent({
           />
         )}
       </Main>
-      <footer className='sticky bottom-0 flex items-center justify-between bg-cb-dusty-blue px-2 pb-4 pt-2'>
-        <div className='flex space-x-4'>
-          {hasChanges ? (
+      <footer className='sticky bottom-0 flex flex-col space-y-2 bg-cb-dusty-blue px-2 pb-4 pt-2'>
+        <BookSearch
+          searchRef={searchRef}
+          onSelectBook={scripture => {
+            const scriptureText = transformScripturetoText(scripture)
+            const chapterLink = getBookLink(scriptureText)
+
+            const bookWithChapter = `${scripture.bookName} ${scripture.chapter}`
+
+            const INSERT = bookWithChapter
+            const newText =
+              text.substring(0, currentSelectionStart) +
+              INSERT +
+              text.substring(currentSelectionEnd, text.length)
+
+            if (textAreaRef.current) {
+              textAreaRef.current.focus()
+              textAreaRef.current.value = newText
+
+              textAreaRef.current.setSelectionRange(
+                currentSelectionStart + 1,
+                currentSelectionStart + 1
+              )
+            }
+
+            setText(newText)
+
+            window.open(chapterLink)
+          }}
+        />
+        <div className='flex items-center justify-between'>
+          <div className='flex space-x-4'>
+            {hasChanges ? (
+              <button
+                className='text-cb-yellow hover:text-cb-yellow/75 disabled:pointer-events-none disabled:opacity-25'
+                onClick={() => {
+                  setIsDiscardChangesModalOpen(true)
+                }}
+              >
+                <Bars2Icon className='h-6 w-6' />
+              </button>
+            ) : (
+              <Link
+                className='text-cb-yellow hover:text-cb-yellow/75 disabled:pointer-events-none disabled:opacity-25'
+                href='/notes'
+              >
+                <Bars2Icon className='h-6 w-6' />
+              </Link>
+            )}
+          </div>
+          <div className='flex space-x-4'>
             <button
-              className='text-cb-yellow hover:text-cb-yellow/75 disabled:pointer-events-none disabled:opacity-25'
+              className='text-cb-mint hover:text-cb-mint/75 disabled:pointer-events-none disabled:text-cb-light-blue'
+              type='button'
               onClick={() => {
-                setIsDiscardChangesModalOpen(true)
+                setIsSwordModalOpen(!isSwordModalOpen)
               }}
             >
-              <Bars2Icon className='h-6 w-6' />
+              <BookOpenIcon className='h-6 w-6' />
             </button>
-          ) : (
-            <Link
-              className='text-cb-yellow hover:text-cb-yellow/75 disabled:pointer-events-none disabled:opacity-25'
-              href='/notes'
-            >
-              <Bars2Icon className='h-6 w-6' />
-            </Link>
-          )}
-        </div>
-        <div className='flex space-x-4'>
-          <button
-            className='text-cb-mint hover:text-cb-mint/75 disabled:pointer-events-none disabled:text-cb-light-blue'
-            type='button'
-            onClick={() => {
-              setIsSwordModalOpen(!isSwordModalOpen)
-            }}
-          >
-            <BookOpenIcon className='h-6 w-6' />
-          </button>
-          {note ? (
-            <>
-              <button
-                className='text-cb-yellow hover:text-cb-yellow/75 disabled:pointer-events-none disabled:text-cb-light-blue'
-                type='button'
-                onClick={() => {
-                  setTab('share')
-                }}
-                disabled={tab === 'share'}
-              >
-                <ShareIcon className='h-6 w-6' />
-              </button>
-              <button
-                className='text-cb-yellow hover:text-cb-yellow/75 disabled:pointer-events-none disabled:text-cb-light-blue'
-                type='button'
-                onClick={() => {
-                  setTab('list')
-                }}
-                disabled={tab === 'list'}
-              >
-                <ListBulletIcon className='h-6 w-6' />
-              </button>
-              <button
-                className='text-cb-yellow hover:text-cb-yellow/75 disabled:pointer-events-none disabled:text-cb-light-blue'
-                type='button'
-                onClick={() => {
-                  setTab('settings')
-                }}
-                disabled={tab === 'settings'}
-              >
-                <Cog6ToothIcon className='h-6 w-6' />
-              </button>
-              <button
-                className='text-cb-yellow hover:text-cb-yellow/75 disabled:pointer-events-none disabled:text-cb-light-blue'
-                type='button'
-                onClick={() => {
-                  setTab('tools')
-                }}
-                disabled={tab === 'tools'}
-              >
-                <WrenchIcon className='h-6 w-6' />
-              </button>
-              <button
-                className='text-cb-yellow hover:text-cb-yellow/75 disabled:pointer-events-none disabled:text-cb-light-blue'
-                type='button'
-                onClick={() => {
-                  setTab('default')
-                }}
-                disabled={tab === 'default'}
-              >
-                <PencilSquareIcon className='h-6 w-6' />
-              </button>
-            </>
-          ) : null}
-          {!readOnly && (
             <button
-              className='text-cb-yellow hover:text-cb-yellow/75 disabled:pointer-events-none disabled:opacity-25'
-              onClick={async () => {
-                if (note) {
-                  const [title, ...body] = text.split('\n\n')
-                  const newNote = {
-                    ...note,
-                    id: note.id,
-                    text,
-                    title: title ?? '',
-                    body: body.join('\n\n'),
-                  }
-                  await saveNote(newNote)
-                } else {
-                  const [title, ...body] = text.split('\n\n')
-                  const newNote = {
-                    text,
-                    title: title ?? '',
-                    body: body.join('\n\n'),
-                    list: [],
-                    tags: [],
-                  }
-                  const id = await saveNote(newNote)
-                  router.push(`/notes/${id}`)
-                }
+              className='text-cb-yellow hover:text-cb-yellow/75'
+              type='button'
+              onClick={() => {
+                searchRef?.current?.focus()
               }}
-              disabled={!canSave}
             >
-              <ArrowDownOnSquareIcon className='h-6 w-6' />
+              <MagnifyingGlassIcon className='h-6 w-6' />
             </button>
-          )}
+            {note ? (
+              <>
+                <button
+                  className='text-cb-yellow hover:text-cb-yellow/75 disabled:pointer-events-none disabled:text-cb-light-blue'
+                  type='button'
+                  onClick={() => {
+                    setTab('share')
+                  }}
+                  disabled={tab === 'share'}
+                >
+                  <ShareIcon className='h-6 w-6' />
+                </button>
+                <button
+                  className='text-cb-yellow hover:text-cb-yellow/75 disabled:pointer-events-none disabled:text-cb-light-blue'
+                  type='button'
+                  onClick={() => {
+                    setTab('list')
+                  }}
+                  disabled={tab === 'list'}
+                >
+                  <ListBulletIcon className='h-6 w-6' />
+                </button>
+                <button
+                  className='text-cb-yellow hover:text-cb-yellow/75 disabled:pointer-events-none disabled:text-cb-light-blue'
+                  type='button'
+                  onClick={() => {
+                    setTab('settings')
+                  }}
+                  disabled={tab === 'settings'}
+                >
+                  <Cog6ToothIcon className='h-6 w-6' />
+                </button>
+                <button
+                  className='text-cb-yellow hover:text-cb-yellow/75 disabled:pointer-events-none disabled:text-cb-light-blue'
+                  type='button'
+                  onClick={() => {
+                    setTab('tools')
+                  }}
+                  disabled={tab === 'tools'}
+                >
+                  <WrenchIcon className='h-6 w-6' />
+                </button>
+                <button
+                  className='text-cb-yellow hover:text-cb-yellow/75 disabled:pointer-events-none disabled:text-cb-light-blue'
+                  type='button'
+                  onClick={() => {
+                    setTab('default')
+                  }}
+                  disabled={tab === 'default'}
+                >
+                  <PencilSquareIcon className='h-6 w-6' />
+                </button>
+              </>
+            ) : null}
+            {!readOnly && (
+              <button
+                className='text-cb-yellow hover:text-cb-yellow/75 disabled:pointer-events-none disabled:opacity-25'
+                onClick={async () => {
+                  if (note) {
+                    const [title, ...body] = text.split('\n\n')
+                    const newNote = {
+                      ...note,
+                      id: note.id,
+                      text,
+                      title: title ?? '',
+                      body: body.join('\n\n'),
+                    }
+                    await saveNote(newNote)
+                  } else {
+                    const [title, ...body] = text.split('\n\n')
+                    const newNote = {
+                      text,
+                      title: title ?? '',
+                      body: body.join('\n\n'),
+                      list: [],
+                      tags: [],
+                    }
+                    const id = await saveNote(newNote)
+                    router.push(`/notes/${id}`)
+                  }
+                }}
+                disabled={!canSave}
+              >
+                <ArrowDownOnSquareIcon className='h-6 w-6' />
+              </button>
+            )}
+          </div>
         </div>
       </footer>
       <Modal
@@ -463,6 +507,13 @@ export default function NoteComponent({
                 body: body.join('\n\n'),
               }
               await saveNote(newNote)
+            },
+          },
+          {
+            id: 'focus-book-search',
+            title: 'focus book search',
+            action: () => {
+              searchRef.current?.focus()
             },
           },
         ]}

@@ -1,3 +1,5 @@
+import type { Scripture } from '@/lib/types'
+
 const booksAndChaptersMap: Record<string, number> = {
   'Gen.': 50,
   'Ex.': 40,
@@ -72,5 +74,71 @@ const books = Object.keys(booksAndChaptersMap)
 const bookIndex = (bookName: string) =>
   books.findIndex(b => b === bookName.replace(' ', ' ')) + 1
 
+function getBookLink(bibleText: string) {
+  // TODO: rename to getTextUrl
+  return `https://www.jw.org/finder?srcid=jwlshare&wtlocale=E&prefer=lang&pub=nwtsty&bible=${bibleText}`
+}
+
+function openBookLink(scripture: Scripture) {
+  const text = transformScripturetoText(scripture)
+  const chapterLink = getBookLink(text)
+  window.open(chapterLink)
+}
+
+function transformScripturetoText(scripture: string | Partial<Scripture>) {
+  const defaultVerse = '001'
+  if (typeof scripture === 'string') {
+    const [bookName, bookChapterVerse] = scripture.split(' ') // TODO: account for when book name is '1 XX'
+    const [bookChapter, bookVerse] = bookChapterVerse?.split(':') ?? []
+
+    if (!bookName || !bookChapter) {
+      return ''
+    }
+    const bookNumber = books.indexOf(bookName) + 1
+    const verse = bookVerse ? String(bookVerse).padStart(3, '0') : defaultVerse
+    const bibleText = `${String(bookNumber).padStart(2, '0')}${String(bookChapter).padStart(3, '0')}${verse}`
+    return bibleText
+  } else {
+    const { bookName, chapter, verse } = scripture
+    if (!bookName || !chapter) {
+      return ''
+    }
+    const bookNumber = books.indexOf(bookName) + 1 // TODO: check if bookNumber is on `scripture`
+    const bibleText = `${String(bookNumber).padStart(2, '0')}${String(chapter).padStart(3, '0')}${verse ? `${verse}`.padStart(3, '0') : defaultVerse}`
+    return bibleText
+  }
+}
+
+function transformTextToScripture(text: string) {
+  if (text.length !== 8) {
+    console.log('invalid text')
+    return ''
+  }
+  const bookNumber = Number(text.slice(0, 2))
+  const chapter = Number(text.slice(2, 5))
+  const verse = Number(text.slice(5, 8))
+  const bookName = books[bookNumber - 1]
+  if (!bookName) {
+    console.log('invalid bookName')
+    return ''
+  }
+  const scripture: Scripture = {
+    text,
+    bookName,
+    bookNumber,
+    chapter,
+    verse,
+    asString: `${bookName} ${chapter}:${verse}`,
+  }
+  return scripture
+}
+
 export default books
-export { bookIndex, booksAndChaptersMap }
+export {
+  bookIndex,
+  booksAndChaptersMap,
+  getBookLink,
+  openBookLink,
+  transformScripturetoText,
+  transformTextToScripture,
+}

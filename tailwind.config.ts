@@ -17,6 +17,8 @@ export default {
         'cb-pink': '#fb94ff',
         'cb-light-blue': '#9effff',
         'cb-white': '#cccccc',
+        'sword-purple': '#5a3e84',
+        'sword-blue': '#4a6da7',
       },
       animation: {
         'spin-slow': 'spin 2s linear infinite',
