@@ -204,7 +204,7 @@ export default function NoteComponent({
           />
         )}
       </Main>
-      <footer className='sticky bottom-0 flex flex-col space-y-2 bg-cb-dusty-blue px-2 pb-4 pt-2'>
+      <footer className='sticky bottom-0 flex flex-col space-y-2 bg-cb-dusty-blue px-2 pb-6 pt-2'>
         <BookSearch
           searchRef={searchRef}
           onSelectBook={scripture => {

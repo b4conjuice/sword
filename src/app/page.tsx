@@ -21,7 +21,7 @@ export default function Home() {
         </div>
       </Main>
       {/* <SignedIn>
-        <footer className='flex items-center justify-between bg-cb-dusty-blue px-2 pb-4 pt-2'>
+        <footer className='bg-cb-dusty-blue sticky bottom-0 flex items-center justify-between px-2 pt-2 pb-6'>
           <div className='flex space-x-4'>
             <Link
               href='/notes'
