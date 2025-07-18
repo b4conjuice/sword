@@ -79,6 +79,15 @@ function getBookLink(bibleText: string) {
   return `https://www.jw.org/finder?srcid=jwlshare&wtlocale=E&prefer=lang&pub=nwtsty&bible=${bibleText}`
 }
 
+function getBookLink2(scripture: Scripture) {
+  // example: 40/4/10 - matt 4:10
+  const { bookNumber, chapter, verse } = scripture
+
+  const bibleText = `${bookNumber}/${chapter}/${verse ?? 1}`
+
+  return `https://wol.jw.org/en/wol/b/r1/lp-e/nwtsty/${bibleText}`
+}
+
 function openBookLink(scripture: Scripture) {
   const text = transformScripturetoText(scripture)
   const chapterLink = getBookLink(text)
@@ -138,6 +147,7 @@ export {
   bookIndex,
   booksAndChaptersMap,
   getBookLink,
+  getBookLink2,
   openBookLink,
   transformScripturetoText,
   transformTextToScripture,

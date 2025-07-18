@@ -31,7 +31,11 @@ import Textarea from './textarea'
 import Sword from '@/app/sword'
 import Modal from '@/components/ui/modal'
 import BookSearch from '@/components/book-search'
-import { getBookLink, transformScripturetoText } from '@/lib/books'
+import {
+  getBookLink,
+  getBookLink2,
+  transformScripturetoText,
+} from '@/lib/books'
 // import Tags from './tags'
 
 const TABS = ['default', 'settings', 'list', 'tools', 'share'] as const
@@ -208,8 +212,9 @@ export default function NoteComponent({
         <BookSearch
           searchRef={searchRef}
           onSelectBook={scripture => {
-            const scriptureText = transformScripturetoText(scripture)
-            const chapterLink = getBookLink(scriptureText)
+            // const scriptureText = transformScripturetoText(scripture)
+            // const chapterLink = getBookLink(scriptureText)
+            const chapterLink = getBookLink2(scripture)
 
             const bookWithChapter = `${scripture.bookName} ${scripture.chapter}`
 
