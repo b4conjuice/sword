@@ -18,6 +18,7 @@ import {
 } from '@heroicons/react/20/solid'
 import { useDebounce } from '@uidotdev/usehooks'
 import { useAuth } from '@clerk/nextjs'
+import { Switch } from '@headlessui/react'
 
 import useLocalStorage from '@/lib/useLocalStorage'
 import { type Note } from '@/lib/types'
@@ -48,6 +49,10 @@ export default function NoteComponent({
   note: Note
   allTags?: string[]
 }) {
+  const [bookLinkType, setBookLinkType] = useLocalStorage<'wol' | 'jw'>(
+    'sword-book-link-type',
+    'wol'
+  )
   const searchRef = useRef<HTMLInputElement | null>(null)
   const [swordText, setSwordText] = useState<string | undefined>('1:1')
   const { isSignedIn } = useAuth()
@@ -155,7 +160,20 @@ export default function NoteComponent({
           </>
         ) : tab === 'settings' ? (
           <>
-            <p>settings</p>
+            <h2 className='px-2'>settings</h2>
+            <div className='flex gap-2'>
+              <span>jw</span>
+              <Switch
+                checked={bookLinkType === 'wol'}
+                onChange={() => {
+                  setBookLinkType(bookLinkType === 'wol' ? 'jw' : 'wol')
+                }}
+                className='group inline-flex h-6 w-11 items-center rounded-full bg-cb-blue transition'
+              >
+                <span className='size-4 translate-x-1 rounded-full bg-cb-yellow transition group-data-[checked]:translate-x-6' />
+              </Switch>
+              <span>wol</span>
+            </div>
             <button
               className='flex w-full justify-center py-2 disabled:pointer-events-none disabled:opacity-25'
               disabled={!note}
@@ -212,9 +230,11 @@ export default function NoteComponent({
         <BookSearch
           searchRef={searchRef}
           onSelectBook={scripture => {
-            // const scriptureText = transformScripturetoText(scripture)
-            // const chapterLink = getBookLink(scriptureText)
-            const chapterLink = getBookLink2(scripture)
+            const scriptureText = transformScripturetoText(scripture)
+            const chapterLink =
+              bookLinkType === 'jw'
+                ? getBookLink(scriptureText)
+                : getBookLink2(scripture)
 
             const bookWithChapter = `${scripture.bookName} ${scripture.chapter}`
 
