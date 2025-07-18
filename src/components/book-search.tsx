@@ -81,7 +81,7 @@ function CommandPalette({
         virtual={{
           options: filteredCommands,
         }}
-        immediate
+        // immediate
       >
         {({ activeOption }) => (
           <>
