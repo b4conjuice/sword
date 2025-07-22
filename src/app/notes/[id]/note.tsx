@@ -259,6 +259,7 @@ export default function NoteComponent({
 
             window.open(chapterLink)
           }}
+          showRecentCommands
         />
         <div className='flex items-center justify-between'>
           <div className='flex space-x-4'>
