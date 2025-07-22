@@ -166,7 +166,7 @@ export default function Textarea({
             e.preventDefault()
             command()
           }
-        } else if (key === 'Tab') {
+        } else if (key === 'Tab' && e.shiftKey) {
           e.preventDefault()
 
           const newText =
