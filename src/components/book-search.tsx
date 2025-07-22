@@ -58,7 +58,8 @@ function CommandPalette({
     keys: ['id', 'title', { name: 'name', weight: 2 }],
   })
 
-  const customCommand = createCustomCommand ? createCustomCommand(query) : null
+  const customCommand =
+    createCustomCommand && query !== '' ? createCustomCommand(query) : null
   const filteredCommands = [
     ...(query.length > 0 && customCommand ? [customCommand] : []),
     ...(!query
