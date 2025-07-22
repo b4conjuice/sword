@@ -226,7 +226,7 @@ export default function BookSearch({
   }
 
   const recentCommands =
-    history?.slice(-3).map(({ scripture, url }) => ({
+    history?.slice(3).map(({ scripture, url }) => ({
       id: `go-${scripture.text}`,
       title: `${scripture.asString}`,
       action: () => {
