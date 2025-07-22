@@ -97,7 +97,9 @@ function openBookLink(scripture: Scripture) {
 function transformScripturetoText(scripture: string | Partial<Scripture>) {
   const defaultVerse = '001'
   if (typeof scripture === 'string') {
-    const [bookName, bookChapterVerse] = scripture.split(' ') // TODO: account for when book name is '1 XX'
+    const scriptureSplit = scripture.split(' ')
+    const bookChapterVerse = scriptureSplit.pop() // get last item
+    const bookName = scriptureSplit.join(' ')
     const [bookChapter, bookVerse] = bookChapterVerse?.split(':') ?? []
 
     if (!bookName || !bookChapter) {
