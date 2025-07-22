@@ -236,9 +236,10 @@ export default function NoteComponent({
                 ? getBookLink(scriptureText)
                 : getBookLink2(scripture)
 
-            const bookWithChapter = `${scripture.bookName} ${scripture.chapter}`
+            const scriptureAsString =
+              scripture.asString ?? `${scripture.bookName} ${scripture.chapter}`
 
-            const INSERT = bookWithChapter
+            const INSERT = scriptureAsString
             const newText =
               text.substring(0, currentSelectionStart) +
               INSERT +
